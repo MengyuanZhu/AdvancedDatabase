@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="edit_message">Enter a message</string>
+    <string name="enter_username">Enter your username</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="button_send">Sign in</string>
+    <string name="register">Register</string>
+</resources>
