@@ -62,12 +62,12 @@
         <EditText android:id="@+id/username"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:hint="@string/enter_username"
+            android:hint="@string/enter_username"
                 android:background="@drawable/round_corner"
             android:longClickable="false"
-            android:lines="1"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:layout_height="match_parent"
+            android:singleLine="true" />
 
     </LinearLayout>
     <LinearLayout
@@ -101,9 +101,11 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:hint="@string/enter_password"
+            android:inputType="textPassword"
             android:background="@drawable/round_corner"
             android:lines="1"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:singleLine="true" />
 
     </LinearLayout>
     <LinearLayout
@@ -143,7 +145,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="@string/button_send"
-            android:onClick="sendMessage"
+            android:onClick="signIn"
             android:background="@drawable/round_corner_gradient"/>
     </LinearLayout>
 

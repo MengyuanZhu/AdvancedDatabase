@@ -25,4 +25,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         // Do something in response to button
     }
+
+    public void signIn (View view) {
+        Intent intent = new Intent(this, MapsActivity.class);
+        startActivity(intent);
+    }
+
 }
