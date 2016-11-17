@@ -4,33 +4,38 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.io.PrintWriter;
-
+//import org.json.simple.JSONObject;
 import javax.swing.JOptionPane;
-
+import java.util.List;
+import java.util.Arrays;
 /**
  * Trivial client for the date server.
  */
 public class DateClient {
 
-    /**
-     * Runs the client as an application.  First it displays a dialog
-     * box asking for the IP address or hostname of a host running
-     * the date server, then connects to it and displays the date that
-     * it serves.
-     */
+  
     public static void main(String[] args) throws IOException {
-        
-		OutputStreamWriter osw;
-   		String str = "Hello World";
-        Socket s = new Socket("127.0.0.1", 6969);
-		PrintWriter out = new PrintWriter(s.getOutputStream(), true);
-		out.println(str);
+        //JSONObject obj = new JSONObject();
+	String location="atlanta";
+	String longitude="33.7490";
+	String latitude="84.3880";
+   
+	OutputStreamWriter osw;
+   	String str = location+","+longitude+","+latitude;
+
+
+        Socket s = new Socket("target.gsu.edu", 6969);
+	PrintWriter out = new PrintWriter(s.getOutputStream(), true);
+	out.println(str);
 		
-        BufferedReader input =
-            new BufferedReader(new InputStreamReader(s.getInputStream()));
+        BufferedReader input =  new BufferedReader(new InputStreamReader(s.getInputStream()));
         String answer = input.readLine();
-        
-		System.out.println(answer);
+        List<String> items = Arrays.asList(answer.split("\\s*,\\s*"));
+	for (int i=0;i<items.size();i=i+3){
+		System.out.println(items.get(i).substring(0,items.get(i).indexOf("_")));
+		System.out.println(items.get(1));
+		System.out.println(items.get(2));
+	}
         System.exit(0);
     }
 }
