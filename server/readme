@@ -1,0 +1,5 @@
+Generate pokemons
+$python generatePokemon.py
+
+Active pokemons in the database:
+$node getPokemon  
