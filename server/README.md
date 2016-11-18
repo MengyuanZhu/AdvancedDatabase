@@ -1,5 +1,3 @@
-<snippet>
-  <content><![CDATA[
 
 ##Platform
 Ubuntu 16.04
@@ -26,6 +24,3 @@ Location test (work with getPokemon.js):
 Edits pokemon by the player:
 '$node editPokemon.js'
 
-]]></content>
-  <tabTrigger>readme</tabTrigger>
-</snippet>
