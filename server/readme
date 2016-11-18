@@ -1,3 +1,11 @@
+Ubuntu 16.04
+
+Start redis:
+$redis-server
+
+Start mongoDB:
+$sudo service mongod start
+
 Generate pokemons:
 $python generatePokemon.py
 
