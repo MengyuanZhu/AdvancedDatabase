@@ -1,19 +1,26 @@
+
+
+##Platform
 Ubuntu 16.04
 
+##Start server
+
 Start redis:
-$redis-server
+'$redis-server'
 
 Start mongoDB:
-$sudo service mongod start
+'$sudo service mongod start'
+
+##Server-side scripts
 
 Generate pokemons:
-$python generatePokemon.py
+'$python generatePokemon.py'
 
-Active pokemons in the database:
-$node getPokemon.js  
+Find pokemons in a region:
+'$node getPokemon.js ' 
 
-Location test:
-$java DataClient
+Location test (work with getPokemon.js):
+'$java DataClient'
 
-User play with pokemon:
-$node editPokemon.js
+Edits pokemon by the player:
+'$node editPokemon.js'
