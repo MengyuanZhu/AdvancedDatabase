@@ -1,6 +1,9 @@
 var MongoClient = require('mongodb').MongoClient
   , assert = require('assert');
+const crypto = require('crypto');
 
+
+//pokemon users database
 var url = 'mongodb://localhost:27017/users';
 
 //insert a pokemon to the player
@@ -36,11 +39,17 @@ var updatePokemon = function(db, username, pokemonName, hp) {
   });
 }
 
-// Use connect method to connect to the server
+function createHash(password) {
+  var salt = generateSalt(SaltLength);
+  var hash = md5(password + salt);
+  return salt + hash;
+}
+
+
+//Use connect method to connect to the server
 MongoClient.connect(url, function(err, db) {
   assert.equal(null, err);
   console.log("Connected successfully to server");
-
 
   username="mzhu7"
   pokemonName="Pikachu"
@@ -51,8 +60,14 @@ MongoClient.connect(url, function(err, db) {
   attack=100
   defense=100
 
-  //state 0:show list, 1: insert pokemon, 2: delete pokemon, 3: update pokemon
-  state=0
+  //state 
+  //0: show list
+  //1: insert pokemon
+  //2: delete pokemon
+  //3: update pokemon
+  //4: register
+  //5: verification
+  state=4
   
   if (state==0){
     listPokemons(db, username,function(result) {
@@ -69,6 +84,16 @@ MongoClient.connect(url, function(err, db) {
   else if (state==3){
     updatePokemon(db, username, pokemonName, 10);
   }
+  else if (state==4){
+
+
+    crypto.pbkdf2('ilovedatabase', 'mzhu7', 100, 512, 'sha512', (err, key) => {
+      if (err) throw err;
+      console.log(key.toString('hex'));  // 'c5e478d...1469e50'
+    });
+	
+  }
+  
 
 
 
