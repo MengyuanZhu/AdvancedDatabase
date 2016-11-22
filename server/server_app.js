@@ -10,7 +10,7 @@ var url = 'mongodb://localhost:27017/users';
 var insertPokemon = function(db, username, pokemonName, hp, weight, type, height, attack, defense, callback) {
     var collection = db.collection(username);
     collection.insert({
-        "pokemon": [pokemonName, hp, weight, type, height, attack, defense]
+        "pokemon": pokemonName,"hp": parseInt(hp), "weight":weight, "type":type,"height": height,"attack": attack, "defense": defense
     }, function(err, result) {
         assert.equal(err, null);
         callback(0);
@@ -24,33 +24,36 @@ var listPokemons = function(db, username, callback) {
         "pokemon": {
             '$exists': 1
         }
-    }).toArray(function(err, docs) {
+    },
+    {"_id":0}).toArray(function(err, docs) {
         assert.equal(err, null);
-        callback(docs)
+        callback(JSON.stringify(docs))
     });
 }
 
 //delete a pokemon
-var removePokemon = function(db, username, pokemonName) {
+var removePokemon = function(db, username, pokemonName,callback) {
     var collection = db.collection(username);
     collection.remove({
-        "pokemon.0": pokemonName
+        "pokemon": pokemonName
     }, function(err, docs) {
         assert.equal(err, null);
+        callback(0);
     });
 }
 
 //update a pokemon
-var updatePokemon = function(db, username, pokemonName, hp) {
+var updatePokemon = function(db, username, pokemonName,  callback) {
     var collection = db.collection(username);
     collection.update({
-        "pokemon.0": pokemonName
+        "pokemon": pokemonName
     }, {
         $inc: {
-            "pokemon.1": hp
+            "hp": 1
         }
     }, function(err, docs) {
         assert.equal(err, null);
+        callback(0);
     });
 }
 
@@ -151,16 +154,20 @@ var userEvent = function(db, data, sock) {
     } else if (state == 2) {
         username = clientData[1]
         pokemonName = clientData[2]
-        removePokemon(db, username, pokemonName);
+        removePokemon(db, username, pokemonName, function(result) {
+          sock.write(result+"\n");
+        });
     } else if (state == 3) {
         username = clientData[1]
         pokemonName = clientData[2]
-        updatePokemon(db, username, pokemonName, 10);
+        updatePokemon(db, username, pokemonName, function(result) {
+          sock.write(result+"\n");
+        });
     } else if (state == 4) {
         username = clientData[1]
         password = clientData[2]
         registerUser(db, username, password, function(result) {
-            console.log(result)
+            sock.write(result+"\n");
         });
     } else if (state == 5) {
         username = clientData[1]

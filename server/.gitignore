@@ -1,2 +1,4 @@
-DateClient.class
+*.class
+*.jar
 node_modules/
+
