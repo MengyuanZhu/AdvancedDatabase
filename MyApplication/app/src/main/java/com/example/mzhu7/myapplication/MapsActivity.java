@@ -39,7 +39,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +100,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         }
-
     }
 
     @Override
@@ -143,7 +141,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
     public void userInformation(View view){
-        Intent intent = new Intent(this, UserActivity.class);
+        Intent intent = new Intent(this, UserInformation.class);
         String message = "test";
         intent.putExtra(EXTRA_MESSAGE, message);
         startActivity(intent);
