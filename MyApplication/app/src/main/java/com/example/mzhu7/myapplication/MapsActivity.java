@@ -1,6 +1,7 @@
 package com.example.mzhu7.myapplication;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -8,6 +9,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.widget.Toast;
 
 
@@ -138,6 +140,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
 
+    }
+    public final static String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
+    public void userInformation(View view){
+        Intent intent = new Intent(this, UserActivity.class);
+        String message = "test";
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
