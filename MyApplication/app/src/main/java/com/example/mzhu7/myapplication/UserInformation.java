@@ -2,9 +2,14 @@ package com.example.mzhu7.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,90 +27,93 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
 public class UserInformation extends AppCompatActivity {
-    public String username="";
-
+    public String username;
+    public MyHandler myHandler;
     Socket clientSocket;
-    public class startConnection implements Runnable {
-        @Override
-        public void run() {
-            try {
-                final InetAddress hostAddr = InetAddress.getByName("target.gsu.edu");//This is the local IP of my computer where the serversocket is listening
-                clientSocket = new Socket();
-                clientSocket.bind(null);
-                clientSocket.connect(new InetSocketAddress(hostAddr, 6970),10000);
-
-                String state=String.valueOf(0);
-                String username="mzhu7";
-                String password="123";
-                String pokemonName = "zmy";
-                String hp = String.valueOf(500);
-                String weight = String.valueOf(10);
-                String type = "grass";
-                String height = String.valueOf(1);
-                String attack = String.valueOf(100);
-                String defense = String.valueOf(200);
-
-                OutputStreamWriter osw;
-                String str = state+","+username+","+password; //if state is 5
-                str = state+","+username; //if state is 0
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                out.println(str);
-
-                BufferedReader input =  new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                String answer = input.readLine();
-                if (state.equals("0")) {
-                    Gson gson = new Gson();
-                    Pokemon[] pokemonData = gson.fromJson(answer, Pokemon[].class);
-                    System.out.println(pokemonData[0].pokemon);
-              
-
-                    TextView layout = (TextView) findViewById(R.id.textView1);
-                    layout.setText(pokemonData[0].pokemon);
-                }
-                else{
-                    System.out.println(answer);
-                }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            } // end TryCatch block
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_information);
         Intent intent = getIntent();
-        String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        String message = intent.getStringExtra(MapsActivity.EXTRA_MESSAGE);
         username=message;
 
-        String state=String.valueOf(0);
-        String username="mzhu7";
-        String password="123";
-        String pokemonName = "zmy";
-        String hp = String.valueOf(500);
-        String weight = String.valueOf(10);
-        String type = "grass";
-        String height = String.valueOf(1);
-        String attack = String.valueOf(100);
-        String defense = String.valueOf(200);
+        ListView listView = (ListView)findViewById(R.id.listView);
 
-        OutputStreamWriter osw;
-        String str = state+","+username+","+password; //if state is 5
-        str = state+","+username; //if state is 0
+        UserAccount tom = new UserAccount("Pikachu","300");
+        UserAccount jerry = new UserAccount("Victreebel","1000");
+        UserAccount donald = new UserAccount("Ponyta","600", false);
 
+        UserAccount[] users = new UserAccount[]{tom,jerry, donald};
+        ArrayAdapter<UserAccount> arrayAdapter
+        = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1 , users);
+        listView.setAdapter(arrayAdapter);
 
-       // TextView textView = new TextView(this);
-       // textView.setTextSize(40);
-       // textView.setText(str);
+        myHandler= new MyHandler();
+        MyThread m = new MyThread();
+        new Thread(m).start();
+    }
 
+    class MyHandler extends Handler {
+        public MyHandler() {
+        }
 
-        Thread fst = new Thread(new startConnection());
-        fst.start();
-       // ViewGroup layout = (ViewGroup) findViewById(R.id.activity_user_information);
-      //  layout.addView(textView);
+        public MyHandler(Looper L) {
+            super(L);
+        }
+
+        // 子类必须重写此方法，接受数据
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Bundle b = msg.getData();
+
+            UserAccount[] users = new UserAccount[b.size()];
+
+            int i=0;
+            for (String key : b.keySet()) {
+                users[i]= new UserAccount(key, b.get(key).toString());
+                i++;
+                //Toast.makeText(UserInformation.this, b.get("Pikachu").toString(), Toast.LENGTH_LONG).show();
+            }
+            ListView listView = (ListView)findViewById(R.id.listView);
+            ArrayAdapter<UserAccount> arrayAdapter = new ArrayAdapter<>(UserInformation.this, android.R.layout.simple_list_item_1 , users);
+            listView.setAdapter(arrayAdapter);
+        }
+    }
+
+    class MyThread implements Runnable {
+        public void run() {
+            Message msg = new Message();
+            Bundle b = new Bundle();
+            try {
+                String str = "0,"+username; //if state is 0
+
+                Socket s = new Socket("target.gsu.edu", 6970);
+                PrintWriter out = new PrintWriter(s.getOutputStream(), true);
+                out.println(str);
+
+                BufferedReader input =  new BufferedReader(new InputStreamReader(s.getInputStream()));
+                String answer = input.readLine();
+
+                Gson gson = new Gson();
+                Pokemon[] pokemonData = gson.fromJson(answer, Pokemon[].class);
+                int i=0;
+                while (i<pokemonData.length){
+                    b.putString(pokemonData[i].pokemon,pokemonData[i].hp);
+                    i++;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            msg.setData(b);
+
+            UserInformation.this.myHandler.sendMessage(msg);
+
+        }
     }
 
     class Pokemon{
@@ -117,5 +125,5 @@ public class UserInformation extends AppCompatActivity {
         public String height;
         public String attack;
         public String defense;
-    };
+    }
 }

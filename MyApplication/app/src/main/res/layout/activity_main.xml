@@ -83,7 +83,7 @@
 
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Forget user name?"
+            android:text=" "
             android:id="@+id/forget_username"
             android:layout_weight="1"
             android:gravity="right"
@@ -121,7 +121,7 @@
 
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Forget password?"
+            android:text=" "
             android:id="@+id/forget_password"
             android:layout_weight="1"
             android:gravity="right"
